@@ -1,11 +1,5 @@
 TABLE CUSTOMER :
-create table customer(
-account_no int primary key,
-Name char(20),
-phone_no int,Email_id varchar(10)
-,DOB date,
-address varchar(10),
-user_id varchar(25) unique);
+create table customer( account_no int primary key,Name char(20),phone_no int,Email_id varchar(10),DOB date,address varchar(10),user_id varchar(25) unique);
 TABLE ACCOUNT :
 CREATE TABLE account(
 account_no INT,
@@ -17,11 +11,10 @@ FOREIGN KEY (account_no) REFERENCES customer(account_no));
 TABLE BRANCH :
 CREATE TABLE branch (
 account_no INT,
-19
 branch_city CHAR(20),
 IFSC_code VARCHAR(10),
 assests VARCHAR(15),
-PRIMARY KEY (account_no),
+PRIMARY KEY (account_no), -- Assuming account_no is the primary key in the customer table
 FOREIGN KEY (account_no) REFERENCES customer(account_no)
 );
 TABLE PAYMENT :
@@ -38,7 +31,6 @@ TABLE TRANSACTIONS :
 CREATE TABLE Transactions (
 TransactionID int PRIMARY KEY,
 Account_no int NOT NULL,
-20
 TransactionType VARCHAR(50) NOT NULL,
 Amount DECIMAL(10, 2) NOT NULL,
 TransactionDate DATE NOT NULL,
@@ -59,7 +51,6 @@ TABLE INSURANCE :
 CREATE TABLE Insurance (
 insurance_id INT PRIMARY KEY AUTO_INCREMENT,
 customer_id INT NOT NULL,
-21
 insurance_type VARCHAR(255) NOT NULL,
 policy_number VARCHAR(255) NOT NULL,
 start_date DATE,
@@ -80,7 +71,6 @@ TABLE CREDITCARD :
 CREATE TABLE CreditCard (
 card_id INT PRIMARY KEY,
 customer_id INT NOT NULL,
-22
 card_number VARCHAR(16) NOT NULL,
 expiration_date DATE NOT NULL
 card_holder_name VARCHAR(255) NOT NULL,
@@ -96,16 +86,15 @@ card_holder_name VARCHAR(255) NOT NULL,
 amount decimal(18,2),
 FOREIGN KEY (customer_id) REFERENCES customer(account_no)
 );
-TABLE ATM_CARD:
+TABLE ATM_CARD :
 CREATE TABLE ATM_CARD (
 Account_no int PRIMARY KEY,
 AmountWithdrawal DECIMAL(16, 2) NOT NULL,
 Date_t DATE ,
-23
 TransactionID int UNIQUE NOT NULL,
 FOREIGN KEY (TransactionID) REFERENCES Transactions(TransactionID)
 );
-TABLE LOAN:
+TABLE LOAN1 :
 CREATE TABLE loan(
 account_no int,
 loan_type int,
@@ -122,3 +111,24 @@ Username VARCHAR(50) NOT NULL,
 Password VARCHAR(255) NOT NULL,
 LastLoginTimestamp TIMESTAMP NOT NULL,
 PasswordResetToken VARCHAR(255),
+AccountLockStatus VARCHAR(50) NOT NULL,
+FOREIGN KEY (user_id) REFERENCES Customer1(user_id)
+);
+TABLE MobileBankingApps :
+CREATE TABLE MobileBankingApps (
+AppID int PRIMARY KEY,
+AppName VARCHAR(50) NOT NULL,
+MobilePayments char(2) NOT NULL,
+BiometricLogin char(2) NOT NULL,
+QRCodeTransactions char(2) NOT NULL,
+CustomerID varchar(15) unique,
+FOREIGN KEY (CustomerID) REFERENCES Customer(user_id)
+);
+TABLE GOVERNMENT SERVICES :
+CREATE TABLE GovernmentServices (
+ServiceID int PRIMARY KEY,
+ServiceName VARCHAR(50) NOT NULL,
+ServiceDescription VARCHAR(255) NOT NULL,
+CustomerID varchar(15) unique,
+FOREIGN KEY (CustomerID) REFERENCES Customer(user_id)
+);
