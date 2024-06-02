@@ -1,0 +1,124 @@
+TABLE CUSTOMER :
+create table customer(
+account_no int primary key,
+Name char(20),
+phone_no int,Email_id varchar(10)
+,DOB date,
+address varchar(10),
+user_id varchar(25) unique);
+TABLE ACCOUNT :
+CREATE TABLE account(
+account_no INT,
+Saving_account VARCHAR(5),
+Current_account VARCHAR(5),
+Balance INT,
+PRIMARY KEY (account_no),
+FOREIGN KEY (account_no) REFERENCES customer(account_no));
+TABLE BRANCH :
+CREATE TABLE branch (
+account_no INT,
+19
+branch_city CHAR(20),
+IFSC_code VARCHAR(10),
+assests VARCHAR(15),
+PRIMARY KEY (account_no),
+FOREIGN KEY (account_no) REFERENCES customer(account_no)
+);
+TABLE PAYMENT :
+CREATE TABLE Payment (
+Reference_no int PRIMARY KEY,
+Payment_amount DECIMAL(10, 2) NOT NULL,
+Mode_of_payment VARCHAR(50) NOT NULL,
+Transaction_id VARCHAR(50) NOT NULL UNIQUE,
+Account_no int,
+Date_of_purchase DATE NOT NULL,
+FOREIGN KEY (Account_no) REFERENCES Account(Account_no)
+);
+TABLE TRANSACTIONS :
+CREATE TABLE Transactions (
+TransactionID int PRIMARY KEY,
+Account_no int NOT NULL,
+20
+TransactionType VARCHAR(50) NOT NULL,
+Amount DECIMAL(10, 2) NOT NULL,
+TransactionDate DATE NOT NULL,
+FOREIGN KEY (Account_no) REFERENCES Account(Account_no)
+);
+TABLE MERCHANT :
+create table merchant(
+merchant_id varchar(12) primary key,
+user_id varchar(10) unique,
+transaction_id varchar(15) unique,
+phone_no int(10),
+datetime date,
+modepayment varchar(20),
+amount decimal(16,2),
+FOREIGN KEY (user_id) REFERENCES Customer(user_id),
+FOREIGN KEY (transaction_id) REFERENCES payment(transaction_id));
+TABLE INSURANCE :
+CREATE TABLE Insurance (
+insurance_id INT PRIMARY KEY AUTO_INCREMENT,
+customer_id INT NOT NULL,
+21
+insurance_type VARCHAR(255) NOT NULL,
+policy_number VARCHAR(255) NOT NULL,
+start_date DATE,
+end_date DATE,
+premium_amount DECIMAL(10,2),
+coverage_details varchar(20),
+FOREIGN KEY (customer_id) REFERENCES customer(account_no)
+);
+TABLE BANKTOBANK :
+create table banktobank(
+bank_name varchar(255),
+branch varchar(255),
+amount decimal(15,2),
+transaction_date timestamp,
+account_no int,
+FOREIGN KEY (account_no) REFERENCES account(account_no));
+TABLE CREDITCARD :
+CREATE TABLE CreditCard (
+card_id INT PRIMARY KEY,
+customer_id INT NOT NULL,
+22
+card_number VARCHAR(16) NOT NULL,
+expiration_date DATE NOT NULL
+card_holder_name VARCHAR(255) NOT NULL,
+billing_address varchar(20)
+FOREIGN KEY (customer_id) REFERENCES customer(account_no)
+);
+TABLE DEBITCARD :
+CREATE TABLE DebitCard (
+customer_id INT primary key,
+card_number VARCHAR(16) NOT NULL,
+expiration_date DATE NOT NULL,
+card_holder_name VARCHAR(255) NOT NULL,
+amount decimal(18,2),
+FOREIGN KEY (customer_id) REFERENCES customer(account_no)
+);
+TABLE ATM_CARD:
+CREATE TABLE ATM_CARD (
+Account_no int PRIMARY KEY,
+AmountWithdrawal DECIMAL(16, 2) NOT NULL,
+Date_t DATE ,
+23
+TransactionID int UNIQUE NOT NULL,
+FOREIGN KEY (TransactionID) REFERENCES Transactions(TransactionID)
+);
+TABLE LOAN:
+CREATE TABLE loan(
+account_no int,
+loan_type int,
+loan_no varchar(20),
+amount int,
+interest int,
+PRIMARY KEY (account_no),
+FOREIGN KEY (account_no) REFERENCES customer(account_no));
+TABLE BANK SECURITY :
+CREATE TABLE BankSecurity (
+SecurityID int PRIMARY KEY,
+user_id varchar(15) UNIQUE NOT NULL,
+Username VARCHAR(50) NOT NULL,
+Password VARCHAR(255) NOT NULL,
+LastLoginTimestamp TIMESTAMP NOT NULL,
+PasswordResetToken VARCHAR(255),
