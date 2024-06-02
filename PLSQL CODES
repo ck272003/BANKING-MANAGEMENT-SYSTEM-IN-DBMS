@@ -1,0 +1,138 @@
+PL/SQL UPDATED CODE
+
+Q1 : Write a PL/SQL block to add 10% more interest on loan type = home loan
+ANSWER:
+SET SERVEROUTPUT ON
+
+DECLARE
+    v_account_no loan1.account_no%TYPE;
+    v_loan_type loan1.loan_type%TYPE;
+    v_loan_no loan1.loan_no%TYPE;
+    v_amount loan1.amount%TYPE;
+    v_interest loan1.interest%TYPE;
+BEGIN
+    -- Update interest for home loans
+    FOR loan_rec IN (SELECT * FROM loan1 WHERE loan_type = 'Home loan') LOOP
+        v_account_no := loan_rec.account_no;
+        v_loan_type := loan_rec.loan_type;
+        v_loan_no := loan_rec.loan_no;
+        v_amount := loan_rec.amount;
+        v_interest := loan_rec.interest;
+        
+        -- Calculate 10% more interest for home loans
+        v_interest := v_interest + (v_interest * 0.1);
+        
+        -- Update interest rate in loan1 table
+        UPDATE loan1
+        SET interest = v_interest
+        WHERE account_no = v_account_no;
+        
+        -- Output the changes made
+        DBMS_OUTPUT.PUT_LINE('Interest rate for ' || v_loan_type || ' with Account No ' || v_account_no || ' updated to ' || v_interest);
+    END LOOP;
+
+    -- Display the updated table
+    FOR loan_rec IN (SELECT * FROM loan1) LOOP
+        DBMS_OUTPUT.PUT_LINE('Account No: ' || loan_rec.account_no || ', Loan Type: ' || loan_rec.loan_type || ', Loan No: ' || loan_rec.loan_no || ', Amount: ' || loan_rec.amount || ', Interest: ' || loan_rec.interest);
+    END LOOP;
+    
+    -- Commit the changes
+    COMMIT;
+EXCEPTION
+    WHEN OTHERS THEN
+        -- Handle exceptions
+        DBMS_OUTPUT.PUT_LINE('Error: ' || SQLERRM);
+        ROLLBACK;
+END;
+/
+
+Q2 :Write a before trigger to add 10000 ruppee to customer table debit card whose amount is more than 75000 
+ANSWER:
+
+ SET SERVEROUTPUT ON
+ CREATE OR REPLACE TRIGGER update_debitcard_amount_trigger
+   BEFORE INSERT ON DebitCard
+     FOR EACH ROW
+     BEGIN
+       IF :NEW.amount >= 75000 THEN 
+         :NEW.amount := :NEW.amount +10000;
+      END IF;
+    END;
+    /
+
+
+
+ DECLARE 
+     v_cardholder_name DebitCard.card_holder_name%TYPE; 
+ BEGIN 
+     FOR debitcard_rec IN (SELECT card_holder_name FROM DebitCard WHERE amount >=75000) LOOP 
+         v_cardholder_name := debitcard_rec.card_holder_name; 
+         DBMS_OUTPUT.PUT_LINE('Cardholder Name: ' || v_cardholder_name); 
+     END LOOP; 
+ END; 
+ /
+
+Q3:Write a plsql code of explicit cursor to display all the email_id af all customer name from table customer
+ANSWER:
+ DECLARE
+      v_email customer.email_id%TYPE;
+      CURSOR cust_cursor IS
+        SELECT email_id FROM customer;
+   BEGIN
+      OPEN cust_cursor;
+      LOOP
+        FETCH cust_cursor INTO v_email;
+        EXIT WHEN cust_cursor%NOTFOUND;
+      DBMS_OUTPUT.PUT_LINE('Email ID: ' || v_email);
+    END LOOP;
+    CLOSE cust_cursor;
+  END;
+  /
+
+Q4:write a plsql code of implicite cursor to diaplay the card_holder_name of those people who have expiration_date after year 2026 and also display result as an output
+ANSWER:
+SQL> SET SERVEROUTPUT ON
+-- Create a PL/SQL procedure to fetch card_holder_name for cards expiring after 2026
+SQL> CREATE OR REPLACE PROCEDURE DisplayCardHolders AS 
+  v_card_holder_name CreditCard.card_holder_name%TYPE;
+  v_expiration_date CreditCard.expiration_date%TYPE;
+  -- Declare an implicit cursor
+  CURSOR card_cursor IS 
+    SELECT card_holder_name, expiration_date 
+    FROM CreditCard 
+    WHERE expiration_date > TO_DATE('2026-12-31', 'YYYY-MM-DD');
+BEGIN 
+  -- Open the cursor
+  OPEN card_cursor; 
+
+LOOP 
+  -- Fetch the next row from the cursor into variables
+  FETCH card_cursor INTO v_card_holder_name, v_expiration_date; 
+
+-- Check if there are no more rows to fetch 
+EXIT WHEN card_cursor%NOTFOUND; 
+
+-- Display card holder name if expiration date is after 2026
+DBMS_OUTPUT.PUT_LINE('Card Holder Name: ' || v_card_holder_name); 
+END LOOP; 
+
+-- Close the cursor
+CLOSE card_cursor; 
+END;
+/
+
+ -- Execute the procedure and display the card holders with expiration date after 2026
+ BEGIN
+     DisplayCardHolders;
+   END;
+   /
+
+Q5:create a view and add all column from customer and add card no and amount from debit card and also show the view as output with table name view1
+ANSWER:
+CREATE VIEW1 AS select c.account_no , c.name , c.phone_no , c.email-id , c.DOB , c.address, c.user_id, d.card_number AS debit_card_number, d.amount AS debit_card_amount from customer c JOIN debitcard d on c.account_no = d.customer_id;
+
+
+
+
+
+
